@@ -22,22 +22,31 @@ async function askQuestion() {
 
         // TODO 4:
         // Send a POST request to /api/ask
+        const response = await fetch("/api/ask",{
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({"question": question})
+        });
+
+
+        
         // with JSON:
-        //
+        
         // {
         //     "question": question
         // }
 
-        const response = null;
+        //const response = null;
 
 
         // TODO 5:
         // Convert the response to JSON
+        
         // and display data.answer in answerBox.
 
-        const data = null;
+        const data = await response.json();
 
-        answerBox.textContent = "TODO: display the answer";
+        answerBox.textContent = data.answer;
 
     } catch (error) {
 
