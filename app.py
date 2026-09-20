@@ -83,14 +83,15 @@ def create_retriever():
     # TODO 1:
     # Create Ollama embeddings using:
     # model="nomic-embed-text"
+    embeddings = OllamaEmbeddings(model = "nomic-embed-text")
 
-    embeddings = None
+    #embeddings = model()
 
 
     # TODO 2:
     # Create a FAISS vector store
 
-    vector_store = None
+    vector_store = FAISS.from_documents(embedding= embeddings,documents= documents)
 
 
     if vector_store is None:
@@ -136,9 +137,17 @@ def ask_question(data: QuestionRequest):
     # 4. Send it to the LLM
     # 5. Store the final text in "answer"
 
-    context = ""
-    answer = "TODO"
+    docs = retriever.invoke(data.question)
+    context = "\n\n".join(
+        docs.page_content 
+        for doc in docs
+    )
 
+    
+    formatted_prompt = prompt.format(context= context, question= data.question)
+    answer = llm.invoke(formatted_prompt).content
+
+     
 
     return {
         "question": data.question,
